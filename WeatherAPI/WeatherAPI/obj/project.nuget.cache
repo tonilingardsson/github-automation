@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "wOHhw26YffM=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ChristofferWallenber\\Documents\\ZoCom\\Campus Varberg\\Avancerad systemutveckling .NET\\Lektionsrepon\\lektion-13-oktober\\WeatherAPI\\WeatherAPI\\WeatherAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ChristofferWallenber\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.12\\microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
+    "C:\\Users\\ChristofferWallenber\\.nuget\\packages\\microsoft.openapi\\2.12.0\\microsoft.openapi.2.12.0.nupkg.sha512",
+    "C:\\Users\\ChristofferWallenber\\.nuget\\packages\\scalar.aspnetcore\\2.17.13\\scalar.aspnetcore.2.17.13.nupkg.sha512"
+  ],
+  "logs": []
+}
