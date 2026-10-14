@@ -1,0 +1,70 @@
+name: Build and deploy Weather API
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: weather-api-production
+  cancel-in-progress: false
+
+env:
+  IMAGE_NAME: underfunk/weather-api
+  AZURE_WEBAPP_NAME: github-automation
+  AZURE_RESOURCE_GROUP: lesson-6-october
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v7
+        with:
+          context: ./WheatherAPI/WeatherAPI
+          file: ./WheatherAPI/WeatherAPI/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Update main container
+        run: |
+          az webapp sitecontainers update \
+            --name "$AZURE_WEBAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --container-name main \
+            --image "docker.io/$IMAGE_NAME:$GITHUB_SHA" \
+            --target-port 8080 \
+            --output none
+
+      - name: Restart Web App
+        run: |
+          az webapp restart \
+            --name "$AZURE_WEBAPP_NAME" \
+            --resource-group "$AZURE_RESOURCE_GROUP" \
+            --output none
