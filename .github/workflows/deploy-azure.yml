@@ -39,7 +39,7 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v7
         with:
-          context: ./WheatherAPI/WeatherAPI
+          context: ./WeatherAPI/WeatherAPI
           file: ./WeatherAPI/WeatherAPI/Dockerfile
           platforms: linux/amd64
           push: true
